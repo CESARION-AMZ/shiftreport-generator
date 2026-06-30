@@ -1,0 +1,13 @@
+timestamp,area,operator,units_processed,errors,downtime_min
+2026-06-30 06:12,Empaque,A. Rivas,420,3,5
+2026-06-30 06:45,Empaque,A. Rivas,510,1,0
+2026-06-30 07:20,Linea 1,M. Soto,380,7,12
+2026-06-30 07:55,Linea 1,M. Soto,295,4,8
+2026-06-30 08:30,Linea 2,J. Vidal,610,2,0
+2026-06-30 09:10,Linea 2,J. Vidal,540,5,6
+2026-06-30 09:50,Empaque,L. Mena,470,0,0
+2026-06-30 10:25,Linea 1,M. Soto,330,6,15
+2026-06-30 11:05,Linea 2,J. Vidal,580,1,2
+2026-06-30 11:40,Empaque,L. Mena,505,2,0
+2026-06-30 12:15,Linea 1,P. Cano,410,3,4
+2026-06-30 12:50,Linea 2,P. Cano,565,4,0
