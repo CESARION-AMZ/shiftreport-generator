@@ -26,6 +26,24 @@ def _to_number(value: object) -> float | None:
             return None
 
 
+def resolve_input(path: str | Path) -> Path:
+    """Si 'path' es una carpeta, devuelve el CSV/Excel MAS RECIENTE que contenga.
+
+    Permite apuntar el tool a la carpeta donde tu sistema deja los exports y que
+    coja automaticamente el ultimo, sin elegir archivo a mano.
+    """
+    p = Path(path)
+    if p.is_dir():
+        candidates = [
+            f for f in p.iterdir()
+            if f.is_file() and f.suffix.lower() in (".csv", ".xlsx", ".xlsm")
+        ]
+        if not candidates:
+            raise FileNotFoundError(f"No hay archivos .csv/.xlsx en la carpeta: {p}")
+        return max(candidates, key=lambda f: f.stat().st_mtime)
+    return p
+
+
 def load_rows(path: str | Path) -> tuple[list[str], list[dict]]:
     """Carga un archivo CSV o XLSX. Returns (headers, rows)."""
     p = Path(path)

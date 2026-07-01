@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from . import __version__
-from .reader import load_rows
+from .reader import load_rows, resolve_input
 from .report import summarize, write_excel, write_html
 
 
@@ -18,7 +18,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="shiftreport",
         description="Convierte un CSV/Excel de turno en un reporte (Excel + HTML) y lo envia.",
     )
-    p.add_argument("input", help="Ruta al archivo de entrada (.csv o .xlsx)")
+    p.add_argument("input", help="Archivo (.csv/.xlsx) O carpeta (coge el mas reciente)")
     p.add_argument("-o", "--output", default="outputs", help="Carpeta de salida (def: outputs)")
     p.add_argument("-t", "--title", default="Reporte de turno", help="Titulo del reporte")
     p.add_argument("-g", "--group-by", default=None, help="Columna por la que agrupar")
@@ -54,7 +54,8 @@ def run(args: argparse.Namespace) -> int:
     if args.at:
         _wait_until(args.at)
 
-    headers, rows = load_rows(args.input)
+    input_path = resolve_input(args.input)
+    headers, rows = load_rows(input_path)
     if not rows:
         print("[shiftreport] El archivo no tiene filas de datos.", file=sys.stderr)
         return 2
@@ -117,3 +118,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

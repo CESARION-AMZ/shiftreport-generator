@@ -1,8 +1,10 @@
+import os
+import time
 from pathlib import Path
 
 import pytest
 
-from shiftreport.reader import _to_number, detect_numeric_columns, load_rows
+from shiftreport.reader import _to_number, detect_numeric_columns, load_rows, resolve_input
 
 EXAMPLE = Path(__file__).resolve().parents[1] / "examples" / "sample_shift_data.csv"
 
@@ -43,3 +45,22 @@ def test_unsupported_format(tmp_path):
     bad.write_text("hola")
     with pytest.raises(ValueError):
         load_rows(bad)
+
+
+def test_resolve_input_file_passthrough():
+    assert resolve_input(EXAMPLE) == EXAMPLE
+
+
+def test_resolve_input_picks_newest(tmp_path):
+    old = tmp_path / "old.csv"
+    new = tmp_path / "new.csv"
+    old.write_text("a,b\n1,2\n")
+    new.write_text("a,b\n3,4\n")
+    past = time.time() - 1000
+    os.utime(old, (past, past))
+    assert resolve_input(tmp_path) == new
+
+
+def test_resolve_input_empty_folder(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        resolve_input(tmp_path)
